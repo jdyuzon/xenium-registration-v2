@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 560" font-family="'Segoe UI',Helvetica,Arial,sans-serif">
+
+  <!-- Background -->
+  <rect width="920" height="560" rx="12" fill="#f8f9fc"/>
+
+  <!-- Title -->
+  <text x="460" y="38" text-anchor="middle" font-size="18" font-weight="bold" fill="#1a1a2e">
+    xenium-registration-v2 · Pipeline Overview
+  </text>
+  <text x="460" y="58" text-anchor="middle" font-size="11" fill="#666">
+    Xenium bundle + fluorescent TIFF → registered h5ad
+  </text>
+
+  <!-- ── INPUT COLUMN ─────────────────────────────────────────────────────── -->
+  <rect x="20" y="80" width="160" height="400" rx="10" fill="#e8eaf6" stroke="#5c6bc0" stroke-width="1.5"/>
+  <text x="100" y="101" text-anchor="middle" font-size="12" font-weight="bold" fill="#3949ab">INPUTS</text>
+
+  <!-- Xenium Bundle box -->
+  <rect x="35" y="112" width="130" height="70" rx="8" fill="#fff" stroke="#5c6bc0" stroke-width="1.2"/>
+  <text x="100" y="132" text-anchor="middle" font-size="10" font-weight="bold" fill="#3949ab">Xenium Bundle</text>
+  <text x="100" y="147" text-anchor="middle" font-size="9" fill="#555">cells.zarr</text>
+  <text x="100" y="160" text-anchor="middle" font-size="9" fill="#555">transcripts.zarr</text>
+  <text x="100" y="173" text-anchor="middle" font-size="9" fill="#555">morphology_focus/</text>
+
+  <!-- TIFF images box -->
+  <rect x="35" y="198" width="130" height="56" rx="8" fill="#fff" stroke="#5c6bc0" stroke-width="1.2"/>
+  <text x="100" y="218" text-anchor="middle" font-size="10" font-weight="bold" fill="#3949ab">Fluorescent TIFFs</text>
+  <text x="100" y="233" text-anchor="middle" font-size="9" fill="#555">OME-TIFF multichannel</text>
+  <text x="100" y="246" text-anchor="middle" font-size="9" fill="#555">DAPI · E-Cad · Vim · 18S</text>
+
+  <!-- Label CSV box -->
+  <rect x="35" y="270" width="130" height="56" rx="8" fill="#fff" stroke="#5c6bc0" stroke-width="1.2"/>
+  <text x="100" y="290" text-anchor="middle" font-size="10" font-weight="bold" fill="#3949ab">Cell Label CSV</text>
+  <text x="100" y="305" text-anchor="middle" font-size="9" fill="#555">cell_id, cell_type</text>
+  <text x="100" y="318" text-anchor="middle" font-size="9" fill="#555">(optional)</text>
+
+  <!-- ── PROCESSING COLUMN ─────────────────────────────────────────────────── -->
+  <rect x="220" y="80" width="480" height="400" rx="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="1.5"/>
+  <text x="460" y="101" text-anchor="middle" font-size="12" font-weight="bold" fill="#2e7d32">PROCESSING  (xenium_app + Streamlit)</text>
+
+  <!-- Step 1 -->
+  <rect x="240" y="114" width="200" height="64" rx="8" fill="#fff" stroke="#388e3c" stroke-width="1.2"/>
+  <text x="265" y="132" font-size="10" font-weight="bold" fill="#2e7d32">① Bundle Parsing</text>
+  <text x="265" y="147" font-size="9" fill="#555">io.py → load_bundle_paths()</text>
+  <text x="265" y="160" font-size="9" fill="#555">manifest.json + zarr files</text>
+  <text x="265" y="173" font-size="9" fill="#555">Validates all file paths</text>
+
+  <!-- Step 2 -->
+  <rect x="460" y="114" width="220" height="64" rx="8" fill="#fff" stroke="#388e3c" stroke-width="1.2"/>
+  <text x="485" y="132" font-size="10" font-weight="bold" fill="#2e7d32">② Channel Loading</text>
+  <text x="485" y="147" font-size="9" fill="#555">xenium.py → load_all_channel_images()</text>
+  <text x="485" y="160" font-size="9" fill="#555">OME header channel-name extraction</text>
+  <text x="485" y="173" font-size="9" fill="#555">Max-dim downscale (default 2048 px)</text>
+
+  <!-- Step 3 -->
+  <rect x="240" y="196" width="200" height="64" rx="8" fill="#fff" stroke="#388e3c" stroke-width="1.2"/>
+  <text x="265" y="214" font-size="10" font-weight="bold" fill="#2e7d32">③ Image Registration</text>
+  <text x="265" y="229" font-size="9" fill="#555">xenium.py → build_registration()</text>
+  <text x="265" y="242" font-size="9" fill="#555">Affine: TIFF µm → Xenium px</text>
+  <text x="265" y="255" font-size="9" fill="#555">Auto-detects pixel_size metadata</text>
+
+  <!-- Step 4 -->
+  <rect x="460" y="196" width="220" height="64" rx="8" fill="#fff" stroke="#388e3c" stroke-width="1.2"/>
+  <text x="485" y="214" font-size="10" font-weight="bold" fill="#2e7d32">④ Cell + Transcript Mapping</text>
+  <text x="485" y="229" font-size="9" fill="#555">register_cells() / register_transcripts()</text>
+  <text x="485" y="242" font-size="9" fill="#555">Applies affine to cell centroids</text>
+  <text x="485" y="255" font-size="9" fill="#555">Interactive Plotly preview overlay</text>
+
+  <!-- Step 5 -->
+  <rect x="240" y="278" width="200" height="64" rx="8" fill="#fff" stroke="#388e3c" stroke-width="1.2"/>
+  <text x="265" y="296" font-size="10" font-weight="bold" fill="#2e7d32">⑤ h5ad Assembly</text>
+  <text x="265" y="311" font-size="9" fill="#555">xenium.py → build_h5ad()</text>
+  <text x="265" y="324" font-size="9" fill="#555">obs: cell metadata + labels</text>
+  <text x="265" y="337" font-size="9" fill="#555">obsm: image coords + morph</text>
+
+  <!-- Step 6 -->
+  <rect x="460" y="278" width="220" height="64" rx="8" fill="#fff" stroke="#388e3c" stroke-width="1.2"/>
+  <text x="485" y="296" font-size="10" font-weight="bold" fill="#2e7d32">⑥ Batch CLI Export</text>
+  <text x="485" y="311" font-size="9" fill="#555">scripts/build_ml_dataset.py</text>
+  <text x="485" y="324" font-size="9" fill="#555">--bundle-dir  --tiff-dir</text>
+  <text x="485" y="337" font-size="9" fill="#555">--label-csv   --output-dir</text>
+
+  <!-- Streamlit UI callout -->
+  <rect x="240" y="362" width="440" height="44" rx="8" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1.2"/>
+  <text x="460" y="381" text-anchor="middle" font-size="10" font-weight="bold" fill="#6a1b9a">Streamlit GUI  (app.py)</text>
+  <text x="460" y="396" text-anchor="middle" font-size="9" fill="#555">Interactive channel selector · Registration quality slider · One-click h5ad export</text>
+
+  <!-- Arrows inside processing -->
+  <line x1="440" y1="146" x2="460" y2="146" stroke="#388e3c" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="440" y1="228" x2="460" y2="228" stroke="#388e3c" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="440" y1="310" x2="460" y2="310" stroke="#388e3c" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="340" y1="178" x2="340" y2="196" stroke="#388e3c" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="570" y1="178" x2="570" y2="196" stroke="#388e3c" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="340" y1="260" x2="340" y2="278" stroke="#388e3c" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="570" y1="260" x2="570" y2="278" stroke="#388e3c" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="340" y1="342" x2="340" y2="362" stroke="#388e3c" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="570" y1="342" x2="570" y2="362" stroke="#388e3c" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ── OUTPUT COLUMN ─────────────────────────────────────────────────────── -->
+  <rect x="740" y="80" width="160" height="400" rx="10" fill="#fff3e0" stroke="#f57c00" stroke-width="1.5"/>
+  <text x="820" y="101" text-anchor="middle" font-size="12" font-weight="bold" fill="#e65100">OUTPUTS</text>
+
+  <rect x="755" y="112" width="130" height="76" rx="8" fill="#fff" stroke="#f57c00" stroke-width="1.2"/>
+  <text x="820" y="132" text-anchor="middle" font-size="10" font-weight="bold" fill="#e65100">sample.h5ad</text>
+  <text x="820" y="147" text-anchor="middle" font-size="9" fill="#555">obs: cell_type, area</text>
+  <text x="820" y="160" text-anchor="middle" font-size="9" fill="#555">X: gene expression</text>
+  <text x="820" y="173" text-anchor="middle" font-size="9" fill="#555">obsm: image_coords</text>
+  <text x="820" y="186" text-anchor="middle" font-size="9" fill="#555">uns: channel_names</text>
+
+  <rect x="755" y="204" width="130" height="60" rx="8" fill="#fff" stroke="#f57c00" stroke-width="1.2"/>
+  <text x="820" y="224" text-anchor="middle" font-size="10" font-weight="bold" fill="#e65100">Registration Preview</text>
+  <text x="820" y="239" text-anchor="middle" font-size="9" fill="#555">Interactive Plotly overlay</text>
+  <text x="820" y="252" text-anchor="middle" font-size="9" fill="#555">Cell · transcript · image</text>
+
+  <rect x="755" y="280" width="130" height="60" rx="8" fill="#fff" stroke="#f57c00" stroke-width="1.2"/>
+  <text x="820" y="300" text-anchor="middle" font-size="10" font-weight="bold" fill="#e65100">→ xenium-ml-v2</text>
+  <text x="820" y="315" text-anchor="middle" font-size="9" fill="#555">Feed h5ads into</text>
+  <text x="820" y="328" text-anchor="middle" font-size="9" fill="#555">ML training pipeline</text>
+
+  <!-- ── CONNECTING ARROWS (inputs → processing → outputs) ─────────────────── -->
+  <!-- inputs to processing -->
+  <line x1="165" y1="147" x2="220" y2="147" stroke="#5c6bc0" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+  <line x1="165" y1="226" x2="220" y2="226" stroke="#5c6bc0" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+  <line x1="165" y1="298" x2="220" y2="298" stroke="#5c6bc0" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+  <!-- processing to outputs -->
+  <line x1="700" y1="147" x2="740" y2="150" stroke="#f57c00" stroke-width="1.5" marker-end="url(#arr-orange)"/>
+  <line x1="700" y1="228" x2="740" y2="234" stroke="#f57c00" stroke-width="1.5" marker-end="url(#arr-orange)"/>
+  <line x1="700" y1="310" x2="740" y2="310" stroke="#f57c00" stroke-width="1.5" marker-end="url(#arr-orange)"/>
+
+  <!-- ── LEGEND ──────────────────────────────────────────────────────────────── -->
+  <rect x="20" y="500" width="880" height="42" rx="8" fill="#eceff1" stroke="#90a4ae" stroke-width="1"/>
+  <rect x="36" y="514" width="14" height="14" rx="3" fill="#5c6bc0"/>
+  <text x="56" y="525" font-size="10" fill="#333">Input files</text>
+  <rect x="136" y="514" width="14" height="14" rx="3" fill="#388e3c"/>
+  <text x="156" y="525" font-size="10" fill="#333">Processing steps</text>
+  <rect x="286" y="514" width="14" height="14" rx="3" fill="#7b1fa2"/>
+  <text x="306" y="525" font-size="10" fill="#333">Streamlit GUI layer</text>
+  <rect x="446" y="514" width="14" height="14" rx="3" fill="#f57c00"/>
+  <text x="466" y="525" font-size="10" fill="#333">Outputs</text>
+  <text x="830" y="525" font-size="9" fill="#999">xenium-registration-v2 v2.0</text>
+
+  <!-- Arrow marker definitions -->
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#388e3c"/>
+    </marker>
+    <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#5c6bc0"/>
+    </marker>
+    <marker id="arr-orange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f57c00"/>
+    </marker>
+  </defs>
+
+</svg>
