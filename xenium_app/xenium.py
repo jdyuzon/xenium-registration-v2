@@ -196,8 +196,14 @@ def load_morphology_image(
         else:
             resolved_channel_name = image_path.stem.replace(".ome", "")
     image = image.astype(np.float32)
-    if image.max() > 0:
-        image = image / image.max()
+    # Percentile-based normalisation: clip to [p1, p99] then scale to [0, 1].
+    # Using per-image /max would collapse every channel to the same [0, 1]
+    # range regardless of true signal intensity, destroying between-channel
+    # brightness differences that downstream models rely on.
+    _p1 = float(np.percentile(image, 1))
+    _p99 = float(np.percentile(image, 99))
+    _span = _p99 - _p1 if _p99 > _p1 else 1.0
+    image = np.clip((image - _p1) / _span, 0.0, 1.0)
 
     return ImageData(
         channel_name=resolved_channel_name,
@@ -510,7 +516,7 @@ def build_h5ad(
         bundle.manifest.get("run_name", "xenium_bundle"): {
             "images": images_dict,
             "scalefactors": {
-                "tissue_hires_scalef": 1.0,
+                "tissue_hires_scalef": 1.0 / image.display_scale,
                 "pixel_size_um_x": image.pixel_size_um_x,
                 "pixel_size_um_y": image.pixel_size_um_y,
                 "display_scale": image.display_scale,

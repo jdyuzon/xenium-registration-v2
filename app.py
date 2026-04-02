@@ -367,7 +367,7 @@ with pred_col1:
 with pred_col2:
     pred_model_path = st.text_input(
         "Model path (.joblib)",
-        placeholder="/path/to/xenium-ml-v2/label_sets/five_class/model_outputs_dinov2_combined/fast_five_class_model.joblib",
+        placeholder="/path/to/xenium-ml-v2/focus_label_sets/five_class/model_outputs_dinov2_crop_combined/fast_five_class_model.joblib",
         key="pred_model",
     )
 

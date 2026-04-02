@@ -62,7 +62,7 @@ my_xenium_run/
 
 | File | Description |
 |------|-------------|
-| `sample.h5ad` | AnnData with `obs` (cell metadata + labels), `X` (gene expression), `obsm["image_coords"]` (registered px coords), `uns["channel_names"]` |
+| `sample.h5ad` | AnnData with `obs` (cell metadata + labels), `X` (gene expression), `obsm["spatial"]` (pixel coords), `obsm["spatial_microns"]` (µm coords), `uns["spatial"]` (images + scalefactors) |
 | Registration preview | Interactive Plotly overlay (shown in Streamlit, not saved by default) |
 
 ### h5ad structure
@@ -73,13 +73,31 @@ AnnData object
   var: gene_ids, feature_types
   X:   (n_cells × n_genes) sparse gene expression
   obsm:
-    spatial          → Xenium µm coordinates (raw)
-    image_coords     → registered pixel coordinates in TIFF space
+    spatial          → pixel coordinates in the stored morphology image (float32)
+    spatial_microns  → Xenium µm coordinates (raw from cells.zarr.zip)
   uns:
-    channel_names    → list of stain names in channel order
-    registration     → affine transform matrix (3×3)
-    xenium_manifest  → copy of manifest.json
+    spatial:
+      <run_name>:
+        images:
+          hires           → primary channel (float32, [0, 1], percentile-normalised)
+          <channel_key>   → additional channels (one per extra OME-TIFF loaded)
+        scalefactors:
+          tissue_hires_scalef  → ratio stored_image / full_res (< 1 when downscaled)
+          pixel_size_um_x      → µm per pixel (x)
+          pixel_size_um_y      → µm per pixel (y)
+          display_scale        → inverse of tissue_hires_scalef (full_res / stored)
+        metadata:
+          source_image         → path to primary OME-TIFF
+          channel_sources      → {channel_name: tiff_path} for all loaded channels
+          registration_source  → which registration transform was applied
+          manifest_path        → path to manifest.json
 ```
+
+> **Image normalisation**: each channel is independently clipped to its own
+> [1st, 99th] percentile then scaled to `[0, 1]`.  This preserves relative
+> brightness differences between channels (e.g. DAPI vs αSMA) which
+> downstream models use for feature extraction.  A global `/max` would
+> collapse every channel to the same range and destroy that signal.
 
 ---
 
@@ -108,6 +126,14 @@ git clone <repo>
 cd xenium-registration-v2
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+**Optional — cell-type prediction tab**: the "Run cell type prediction" panel in
+`app.py` imports `xenium_ml` from the sibling
+[xenium-ml-v2](../xenium-ml-v2/README.md) project.  Install it with:
+
+```bash
+pip install -e ../xenium-ml-v2
 ```
 
 ### Docker

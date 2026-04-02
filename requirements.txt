@@ -11,5 +11,14 @@ imagecodecs>=2025.0
 plotly>=6.0
 matplotlib>=3.9
 
+# Optional — required only for the "Run cell type prediction" feature in app.py.
+# xenium_ml is a local package from the sibling xenium-ml-v2 project; install
+# it by running `pip install -e ../xenium-ml-v2` from this directory.
+# xenium_ml  (see ../xenium-ml-v2)
+joblib>=1.4     # loaded transitively by xenium_ml but listed here for clarity
+scikit-learn>=1.5
+torch>=2.2
+torchvision>=0.17
+
 # Test
 pytest>=8.0
